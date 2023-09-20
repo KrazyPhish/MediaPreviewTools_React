@@ -1,26 +1,208 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useRef, useState } from 'react'
+import './App.css'
+import { Row, Col, Form, Select, Button, Input } from 'antd'
+import { VideoBtnConfig } from './types/video'
+import { AudioBtnConfig, AudioRegion } from './types/audio'
+import { Information } from './types/base'
+import  MediaTools from './components/MediaTools/MediaTools'
 
-function App() {
+const App: React.FC = () => {
+  const videoBtnConfig: VideoBtnConfig = {
+    ifPlayRate: true,
+    ifCutter: true,
+    ifVolume: true,
+    ifInfo: true,
+    ifFullScreen: true
+  }
+
+  const audioBtnConfig: AudioBtnConfig = {
+    ifDisplay: true,
+    ifMuteArea: true,
+    ifMarker: true,
+    ifRepeat: true,
+    ifPlayRate: true,
+    ifVolume: true,
+    ifInfo: true,
+    ifFullScreen: true
+  }
+
+  /**
+   * @description 文件扩展名
+   */
+  const [extension, setExtension] = useState<string>('')
+
+  /**
+   * @description 媒体文件地址Url
+   */
+  const [url, setUrl] = useState<string>('')
+  
+  /**
+   * @description 媒体对应的字幕文件地址Url
+   */
+  const vtt: string = ''
+  
+  /**
+   * @description 视频封面地址Url
+   */
+  const poster: string = ''
+  
+  /**
+   * @description 音视频详细信息数据
+   */
+  const information: Information[] = [
+    { label: '通道数', value: '2' },
+    { label: '采样率', value: '240000' },
+    { label: '帧数', value: '60' }
+  ]
+
+  const [formState, setFormState] = useState({ extension: '.mp3', url: '/demo.wav' })
+
+  const extensionOption: Information[] = [
+    {
+      label: '音频',
+      value: '.mp3'
+    },
+    {
+      label: '邮件',
+      value: '.eml'
+    },
+    {
+      label: 'Office',
+      value: '.docx'
+    },
+    {
+      label: 'PDF',
+      value: '.pdf'
+    },
+    {
+      label: '图片',
+      value: '.jpg'
+    },
+    {
+      label: '视频',
+      value: '.mp4'
+    }
+  ] 
+
+  const formOption: Information[] = [
+    {
+      value: '/demo.wav',
+      label: 'demo.wav'
+    },
+    {
+      value: '/456.mp4',
+      label: '456.mp4'
+    },
+    {
+      value: '/demo.pdf',
+      label: '/demo.pdf'
+    },
+    {
+      value: '/tibet-1.jpg',
+      label: '图片1.jpg'
+    },
+    {
+      value: '/ppt.html',
+      label: 'ppt文档'
+    },
+    {
+      value: 'email_test.html',
+      label: 'email_test'
+    }
+  ]
+
+  const dataSources: AudioRegion[] = [
+    { id: '1', name: 'test1', start: 6.666, end: 8.888, drag: false, resize: false, mute: false },
+    { id: '2', name: 'test2', start: 1.111, end: 3.888, drag: false, resize: false, mute: false },
+    { id: '5', name: 'test3', start: 5.000, end: 9.000, drag: false, resize: false, mute: false },
+    { id: '10', name: 'test4', start: 9.000, end: 9.000, drag: false, resize: false, mute: false },
+    { id: '11', name: 'mute2', start: 14.000, end: 18.000, drag: false, resize: false, mute: true, color: 'rgba(230, 200, 60, 0.1)' },
+    { id: '12', name: 'mute3', start: 1.000, end: 3.000, drag: false, resize: false, mute: true, color: 'rgba(230, 200, 60, 0.1)' },
+  ]
+
+  const [form] = Form.useForm()
+
+  const onTypeChange = (value: string) => {
+    setFormState({
+      ...formState,
+      extension: value
+    })
+  }
+
+  const onAddressChange = (value: string) => {
+    setFormState({
+      ...formState,
+      url: value
+    })
+  }
+
+  const mediaToolsRef = useRef<{ zoomIn: () => void, zoomOut: () => void }>()
+
+  const saveCutter = (param: any) => {
+    console.log('save cutter operation', param)
+  }
+
+  const zoomIn = () => {
+    mediaToolsRef.current?.zoomIn()
+  }
+
+  const zoomOut = () => {
+    mediaToolsRef.current?.zoomOut()
+  }
+
+  const onSubmit = () => {
+    setExtension(formState.extension)
+    setUrl(formState.url)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <React.Fragment>
+      <Row className='my-row' gutter={10}>
+        <Col span={6}>
+          <div className='container left'>
+            <Form layout='horizontal' size='small' form={form}>
+              <Form.Item label='文件类型'>
+                <Select
+                  options={extensionOption}
+                  onChange={onTypeChange}
+                />
+              </Form.Item>
+              <Form.Item label='文件名称'>
+                <Select 
+                  options={formOption}
+                  onChange={onAddressChange}
+                />
+              </Form.Item>
+              <Form.Item label='文件地址'>
+                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => onAddressChange(e.target.value)}/>
+              </Form.Item>
+              <Form.Item>
+                <Button type='primary' onClick={onSubmit}>加载</Button>
+                <Button type='primary' onClick={zoomIn}>+</Button>
+                <Button type='primary' onClick={zoomOut}>-</Button>
+              </Form.Item>
+            </Form>
+          </div>
+        </Col>
+        <Col span={18}>
+          <div className='container'>
+            <MediaTools
+              ref={mediaToolsRef}
+              extension={extension}
+              url={url}
+              vtt={vtt}
+              poster={poster}
+              information={information}
+              dataSources={dataSources}
+              videoBtnConfig={videoBtnConfig}
+              audioBtnConfig={audioBtnConfig}
+              saveCutter={saveCutter}
+            />
+          </div>
+        </Col>
+      </Row>
+    </React.Fragment>
+  )
 }
 
-export default App;
+export default App
