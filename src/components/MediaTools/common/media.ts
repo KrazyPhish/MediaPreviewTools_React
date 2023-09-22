@@ -17,7 +17,10 @@ for (const [key, exts] of extensions) {
 }
 
 export const getMediaType = (extension: string) => {
-  return mediaTypeMap.get(extension) === undefined ? 'unknown' : mediaTypeMap.get(extension) as string
+  let ext: string
+  if (extension.startsWith('.')) ext = extension.slice(1)
+  else ext = extension
+  return mediaTypeMap.get(ext) === undefined ? 'unknown' : mediaTypeMap.get(ext) as string
 }
 
 export const colorMap = [

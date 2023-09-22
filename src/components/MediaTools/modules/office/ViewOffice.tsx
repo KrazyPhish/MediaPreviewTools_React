@@ -21,7 +21,7 @@ const ViewOffice: React.ForwardRefExoticComponent<OfficeProps> = forwardRef((pro
   useImperativeHandle(ref, () => ({ zoomIn, zoomOut }))
 
   return (
-    <div className="container">
+    <div className="office-container">
       <CommonIframe ref={commonIframeRef} url={props.url} />
     </div>
   )

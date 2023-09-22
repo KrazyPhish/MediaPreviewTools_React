@@ -1,0 +1,21 @@
+@import './base.css';
+
+html, body {
+  overflow: hidden;
+  height:100%;
+	margin:0;
+	padding:0;
+}
+
+#root {
+  margin: 0;
+  font-weight: normal;
+  height: 100%;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+}

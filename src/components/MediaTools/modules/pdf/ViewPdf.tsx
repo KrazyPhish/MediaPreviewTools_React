@@ -8,7 +8,7 @@ type PdfProps = {
 
 const ViewPdf: React.FC<PdfProps> = (props) => {
   return (
-    <div className="container">
+    <div className="pdf-container">
       <CommonIframe url={props.url} />
     </div>
   )

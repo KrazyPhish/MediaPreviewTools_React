@@ -14,7 +14,7 @@ const ViewNonsupport: React.FC<NonsupportProps> = (props) => {
   }, [props])
 
   return (
-    <div className="container">
+    <div className="non-container">
       <Empty description={description} />
     </div>
   )
