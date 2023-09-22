@@ -23,11 +23,7 @@ const MediaTools: React.ForwardRefExoticComponent<MediaToolProps> = forwardRef((
   const viewEmailRef = useRef<{ zoomIn: () => void, zoomOut: () => void }>(null)
   const viewOfficeRef = useRef<{ zoomIn: () => void, zoomOut: () => void }>(null)
 
-  const [format, setFormat] = useState('audio')
-
-  useEffect(() => {
-    setFormat(getMediaType(props.extension))
-  }, [props.extension])
+  let format: string = getMediaType(props.extension)
 
   const zoomIn = () => {
     if (format === 'email') viewEmailRef.current?.zoomIn()
@@ -53,7 +49,7 @@ const MediaTools: React.ForwardRefExoticComponent<MediaToolProps> = forwardRef((
       break
     }
     case 'office': {
-      element = <ViewOffice ref={viewOfficeRef} url={props.url} extension={props.extension} />
+      element = <ViewOffice ref={viewOfficeRef} url={props.url} />
       break
     }
     case 'pdf': {
@@ -61,13 +57,12 @@ const MediaTools: React.ForwardRefExoticComponent<MediaToolProps> = forwardRef((
       break
     }
     case 'picture': {
-      element = <ViewPicture ref={viewEmailRef} url={props.url} />
+      element = <ViewPicture url={props.url} />
       break
     }
     case 'audio': {
       element = (
         <ViewAudio 
-          ref={viewEmailRef}
           url={props.url}
           information={props.information}
           dataSources={props.dataSources}
@@ -79,7 +74,6 @@ const MediaTools: React.ForwardRefExoticComponent<MediaToolProps> = forwardRef((
     case 'video': {
       element = (
         <ViewVideo
-          ref={viewEmailRef}
           url={props.url}
           information={props.information}
           vtt={props.vtt}

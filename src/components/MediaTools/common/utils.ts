@@ -87,3 +87,16 @@ export const debounce = <T extends (...args: any[]) => void>(func: T, delay: num
     }, delay)
   }
 }
+
+/**
+ * 可取消的事件监听器
+ * @param {Element} el 
+ * @param {String} event 
+ * @param {EventListenerOrEventListenerObject} listener 
+ * @param {boolean | AddEventListenerOptions} options 
+ * @returns {Function} Stop Listen Function
+ */
+export const setEventListener: Function = (el: Element, event: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) => {
+  el.addEventListener(event, listener, options)
+  return () => el.removeEventListener(event, listener, options)
+}

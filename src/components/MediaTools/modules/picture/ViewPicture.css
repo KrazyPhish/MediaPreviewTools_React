@@ -1,0 +1,34 @@
+li.viewer-prev {
+  display: none;
+}
+li.viewer-play {
+  display: none;
+}
+li.viewer-next {
+  display: none;
+}
+.pic-container {
+  height: 100%;
+  .img-main {
+    height: 100%;
+  }
+  .mini-map {
+    position: absolute;
+    right: 10px;
+    bottom: 50px;
+    max-height: 200px;
+    max-width: 200px;
+    z-index: 2500;
+
+    .preview-box {
+      z-index: 99;
+      position: absolute;
+      top: 0;
+      left: 0;
+      box-sizing: border-box;
+      height: 50px;
+      width: 50px;
+      border: 1px solid #efefef;
+    }
+  }
+}

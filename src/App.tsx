@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import './App.css'
-import { Row, Col, Form, Select, Button, Input } from 'antd'
+import { Row, Col, Form, Select, Button, Input, Space } from 'antd'
 import { VideoBtnConfig } from './types/video'
 import { AudioBtnConfig, AudioRegion } from './types/audio'
 import { Information } from './types/base'
@@ -136,7 +136,7 @@ const App: React.FC = () => {
     })
   }
 
-  const mediaToolsRef = useRef<{ zoomIn: () => void, zoomOut: () => void }>()
+  const mediaToolsRef = useRef<{ zoomIn: () => void, zoomOut: () => void }>(null)
 
   const saveCutter = (param: any) => {
     console.log('save cutter operation', param)
@@ -163,23 +163,27 @@ const App: React.FC = () => {
             <Form layout='horizontal' size='small' form={form}>
               <Form.Item label='文件类型'>
                 <Select
+                  value={formState.extension}
                   options={extensionOption}
                   onChange={onTypeChange}
                 />
               </Form.Item>
               <Form.Item label='文件名称'>
                 <Select 
+                  value={formState.url}
                   options={formOption}
                   onChange={onAddressChange}
                 />
               </Form.Item>
               <Form.Item label='文件地址'>
-                <Input onChange={(e: React.ChangeEvent<HTMLInputElement>) => onAddressChange(e.target.value)}/>
+                <Input value={formState.url} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onAddressChange(e.target.value)}/>
               </Form.Item>
               <Form.Item>
-                <Button type='primary' onClick={onSubmit}>加载</Button>
-                <Button type='primary' onClick={zoomIn}>+</Button>
-                <Button type='primary' onClick={zoomOut}>-</Button>
+                <Space>
+                  <Button type='primary' onClick={onSubmit}>加载</Button>
+                  <Button type='primary' onClick={zoomIn}>+</Button>
+                  <Button type='primary' onClick={zoomOut}>-</Button>
+                </Space>
               </Form.Item>
             </Form>
           </div>
