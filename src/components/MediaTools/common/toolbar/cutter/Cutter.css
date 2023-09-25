@@ -1,0 +1,6 @@
+.media-editor {
+  height: 100%;
+  position: relative;
+  overflow: auto;
+  padding: 0 20px;
+}

@@ -96,7 +96,7 @@ export const debounce = <T extends (...args: any[]) => void>(func: T, delay: num
  * @param {boolean | AddEventListenerOptions} options 
  * @returns {Function} Stop Listen Function
  */
-export const setEventListener: Function = (el: Element, event: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) => {
+export const setEventListener: Function = (el: Element, event: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): Function => {
   el.addEventListener(event, listener, options)
   return () => el.removeEventListener(event, listener, options)
 }

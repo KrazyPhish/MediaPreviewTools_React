@@ -87,9 +87,9 @@ export interface DisplaySettings extends SpectOption {
 }
 
 /**
- * @description 显示设置组件传参列表
+ * @description 显示设置组件配置列表
  */
-export interface PlayDisplayProps {
+export interface DisplayConfig {
   spect?: Partial<SpectOption>
   zoomOptions?: Partial<ZoomMode<Partial<ZoomBase>>>
 }

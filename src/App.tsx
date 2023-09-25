@@ -120,20 +120,18 @@ const App: React.FC = () => {
     { id: '12', name: 'mute3', start: 1.000, end: 3.000, drag: false, resize: false, mute: true, color: 'rgba(230, 200, 60, 0.1)' },
   ]
 
-  const [form] = Form.useForm()
-
   const onTypeChange = (value: string) => {
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       extension: value
-    })
+    }))
   }
 
   const onAddressChange = (value: string) => {
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       url: value
-    })
+    }))
   }
 
   const mediaToolsRef = useRef<{ zoomIn: () => void, zoomOut: () => void }>(null)
@@ -160,7 +158,7 @@ const App: React.FC = () => {
       <Row className='my-row' gutter={10}>
         <Col span={6}>
           <div className='container left'>
-            <Form layout='horizontal' size='small' form={form}>
+            <Form layout='horizontal' size='small'>
               <Form.Item label='文件类型'>
                 <Select
                   value={formState.extension}
