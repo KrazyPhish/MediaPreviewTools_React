@@ -8,7 +8,7 @@ import  MediaTools from './components/MediaTools/MediaTools'
 
 const App: React.FC = () => {
   const videoBtnConfig: VideoBtnConfig = {
-    ifPlayRate: true,
+    isRate: true,
     ifCutter: true,
     ifVolume: true,
     ifInfo: true,
@@ -17,10 +17,9 @@ const App: React.FC = () => {
 
   const audioBtnConfig: AudioBtnConfig = {
     ifDisplay: true,
-    ifMuteArea: true,
-    ifMarker: true,
+    ifMute: true,
     ifRepeat: true,
-    ifPlayRate: true,
+    isRate: true,
     ifVolume: true,
     ifInfo: true,
     ifFullScreen: true

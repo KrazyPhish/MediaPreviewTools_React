@@ -26,19 +26,15 @@ export interface AudioBtnConfig extends CommonBtnConfig {
   /**
  * @description 是否启用显示设置
  */
-  ifDisplay: boolean | undefined,
+  ifDisplay?: boolean,
   /**
    * @description 是否启用静音区域设置
    */
-  ifMuteArea: boolean | undefined,
-  /**
-   * @description 是否启用标注设置
-   */
-  ifMarker: boolean | undefined,
+  ifMute?: boolean,
   /**
    * @description 是否启用复播区域设置
    */
-  ifRepeat: boolean | undefined
+  ifRepeat?: boolean
 }
 
 interface ZoomBase {

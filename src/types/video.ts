@@ -7,7 +7,7 @@ export interface VideoBtnConfig extends CommonBtnConfig {
   /**
    * @description 是否启用剪辑按钮
    */
-  ifCutter: boolean | undefined
+  ifCutter?: boolean
 }
 
 /**

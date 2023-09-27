@@ -124,7 +124,7 @@ const CommonToolbar: React.ForwardRefExoticComponent<ToolbarProps> = forwardRef(
         <div className="right">
           {props.children}
           { 
-            (props.options?.ifPlayRate !== false) && 
+            (props.options?.isRate !== false) && 
             <CommonPopover
               ref={ratePopperRef}
               popperClass="toolbar-popper"

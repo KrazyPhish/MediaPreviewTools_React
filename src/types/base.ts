@@ -15,19 +15,19 @@ export interface CommonBtnConfig {
   /**
    * @description 是否启用播放倍率按钮
    */
-  ifPlayRate: boolean | undefined,
+  isRate?: boolean,
   /**
    * @description 是否启用音量按钮
    */
-  ifVolume: boolean | undefined,
+  ifVolume?: boolean,
   /**
    * @description 是否启用详细信息按钮
    */
-  ifInfo: boolean | undefined,
+  ifInfo?: boolean,
   /**
    * @description 是否启用全屏按钮
    */
-  ifFullScreen: boolean | undefined
+  ifFullScreen?: boolean
 }
 
 /**
