@@ -20,8 +20,8 @@ const CommonPopover: React.ForwardRefExoticComponent<PopoverProps> = forwardRef(
   const [visible, setVisible] = useState(false)
 
   const instanceProxy: {
-    reference: HTMLElement | null,
-    popperEl: Instance | null,
+    reference: HTMLElement | null
+    popperEl: Instance | null
     popper: HTMLDivElement | null
   } = {
     reference: null,
@@ -30,7 +30,7 @@ const CommonPopover: React.ForwardRefExoticComponent<PopoverProps> = forwardRef(
   }
 
   const listeners: {
-    stopReference: Function | null,
+    stopReference: Function | null
     stopDocument: Function | null
   } = {
     stopReference: null,

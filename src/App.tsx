@@ -3,7 +3,7 @@ import './App.css'
 import { Row, Col, Form, Select, Button, Input, Space } from 'antd'
 import { VideoBtnConfig } from './types/video'
 import { AudioBtnConfig, AudioRegion } from './types/audio'
-import { Information } from './types/base'
+import { CutterInfo, Information } from './types/base'
 import  MediaTools from './components/MediaTools/MediaTools'
 
 const App: React.FC = () => {
@@ -136,7 +136,7 @@ const App: React.FC = () => {
 
   const mediaToolsRef = useRef<{ zoomIn: () => void, zoomOut: () => void }>(null)
 
-  const saveCutter = (param: any) => {
+  const saveCutter = (param: CutterInfo) => {
     console.log('save cutter operation', param)
   }
 

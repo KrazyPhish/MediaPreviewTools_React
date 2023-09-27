@@ -27,13 +27,13 @@ const Display: React.FC<DisplayProps> = (props) => {
   return (
     <div className="media-display">
       <Form layout="horizontal" size="small">
-        <Form.Item label="频谱图">
+        <Form.Item label='频谱图'>
           <Switch checked={props.spect.spectrum} disabled={!props.spect.spectrogram} onChange={(value) => onStateChange('spectrum', value)}/>
         </Form.Item>
-        <Form.Item label="语谱图">
+        <Form.Item label='语谱图'>
           <Switch checked={props.spect.spectrogram} disabled={!props.spect.spectrum} onChange={(value) => onStateChange('spectrogram', value)}/>
         </Form.Item>
-        <Form.Item label="水平缩放">
+        <Form.Item label='水平缩放'>
           <Slider
             value={props.zoomOptions.horizontalZoom.init}
             min={props.zoomOptions.horizontalZoom.min}
@@ -43,7 +43,7 @@ const Display: React.FC<DisplayProps> = (props) => {
             onChange={(value) => onStateChange('horizontalZoom', value)}
           />
         </Form.Item>
-        <Form.Item label="垂直缩放">
+        <Form.Item label='垂直缩放'>
           <Slider
             value={props.zoomOptions.verticalZoom.init}
             min={props.zoomOptions.verticalZoom.min}

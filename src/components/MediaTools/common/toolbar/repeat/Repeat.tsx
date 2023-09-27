@@ -34,14 +34,14 @@ const Repeat: React.FC<RepeatProps> = (props) => {
 
   return (
     <React.Fragment>
-      <Form layout="horizontal" form={form}>
-        <Form.Item name="start">
-          <Input addonBefore="开始时间" placeholder="00:00:00"/>
+      <Form layout='horizontal' form={form}>
+        <Form.Item name='start'>
+          <Input addonBefore='开始时间' placeholder='00:00:00'/>
         </Form.Item>
-        <Form.Item name="end">
-          <Input addonBefore="结束时间" placeholder="00:00:00"/>
+        <Form.Item name='end'>
+          <Input addonBefore='结束时间' placeholder='00:00:00'/>
         </Form.Item>
-        <Form.Item label="复播" name="repeat" valuePropName="checked">
+        <Form.Item label='复播' name='repeat' valuePropName='checked'>
           <Switch defaultChecked={false} checkedChildren="开启" unCheckedChildren="关闭" onChange={() => toggleRepeat()}/>
         </Form.Item>
       </Form>

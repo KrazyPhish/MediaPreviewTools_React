@@ -1,5 +1,5 @@
-import React, { ForwardedRef, ReactElement, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react"
-import { Information } from "../../types/base"
+import React, { ForwardedRef, ReactElement, forwardRef, useImperativeHandle, useRef } from "react"
+import { CutterInfo, Information } from "../../types/base"
 import { AudioBtnConfig, AudioRegion } from "../../types/audio"
 import { VideoBtnConfig } from '../../types/video'
 import { getMediaType } from "./common"
@@ -16,7 +16,7 @@ type MediaToolProps = {
   poster: string
   information: Information[]
   dataSources: AudioRegion[]
-  saveCutter: (param: any) => void
+  saveCutter: (param: CutterInfo) => void
 }
 
 const MediaTools: React.ForwardRefExoticComponent<MediaToolProps> = forwardRef((props, ref) => {
@@ -35,7 +35,7 @@ const MediaTools: React.ForwardRefExoticComponent<MediaToolProps> = forwardRef((
     else viewOfficeRef.current?.zoomOut()
   }
 
-  const saveCutter = (param: any) => {
+  const saveCutter = (param: CutterInfo) => {
     props.saveCutter(param)
   }
 

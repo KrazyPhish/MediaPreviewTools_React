@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react'
 import './Cutter.css'
 import { CutterInfo } from '../../../../../types/base'
@@ -43,7 +44,7 @@ const Cutter: React.FC<CutterProps> = (props) => {
       setStart(startString)
       setEnd(endString)
     }
-  }, [start, end, range, currentInput, skip])
+  }, [range])
 
   const formatTooltip = (time: number | undefined) => {
     return formatTime(time!)
@@ -111,7 +112,7 @@ const Cutter: React.FC<CutterProps> = (props) => {
           <Input
             ref={startInputRef}
             value={start}
-            addonBefore="开始时间"
+            addonBefore='开始时间'
             onFocus={() => onFocus('start')}
             onBlur={() => onBlur('start')}
             onChange={(e) => onStartChange(e.target.value)}
@@ -121,7 +122,7 @@ const Cutter: React.FC<CutterProps> = (props) => {
           <Input
             ref={endInputRef}
             value={end}
-            addonBefore="结束时间"
+            addonBefore='结束时间'
             onFocus={() => onFocus('end')}
             onBlur={() => onBlur('end')}
             onChange={(e) => onEndChange(e.target.value)}

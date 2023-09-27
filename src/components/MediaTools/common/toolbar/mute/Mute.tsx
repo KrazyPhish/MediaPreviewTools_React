@@ -12,10 +12,10 @@ type MuteProps = {
 const Mute: React.FC<MuteProps> = (props) => {
   return (
     <React.Fragment>
-      <div className="switch-container">
+      <div className='switch-container'>
         <Switch checked={props.skip} onChange={props.onSkip}/>
       </div>
-      <div className="switch-container">
+      <div className='switch-container'>
         <Switch checked={props.show} onChange={props.onShow}/>
       </div>
     </React.Fragment>
