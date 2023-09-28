@@ -1,0 +1,32 @@
+.audio-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .audio-content {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 64px;
+    display: flex;
+    flex-direction: row;
+    .wavesurfer-container {
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      flex: 1 auto;
+      .wave-spectrum {
+        audio {
+          position: absolute;
+          bottom: 0;
+        }
+      }
+      .wave-spectrogram {
+        .spec-labels {
+          position: absolute;
+        }
+      }
+    }
+  }
+}

@@ -166,7 +166,7 @@ const CommonToolbar: React.ForwardRefExoticComponent<ToolbarProps> = forwardRef(
             )
           }
           {
-            (props.options.ifInfo !== false) &&
+            (props.options?.ifInfo !== false) &&
             <CommonPopover 
               popperClass="toolbar-popper"
               placement="top-end"
