@@ -1,3 +1,8 @@
+import Decoder from './decoder.js';
+import Fetcher from './fetcher.js';
+import Player from './player.js';
+import Renderer from './renderer.js';
+import Timer from './timer.js';
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,11 +12,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import Decoder from './decoder.js';
-import Fetcher from './fetcher.js';
-import Player from './player.js';
-import Renderer from './renderer.js';
-import Timer from './timer.js';
 const defaultOptions = {
     waveColor: '#999',
     progressColor: '#555',
@@ -262,6 +262,7 @@ class WaveSurfer extends Player {
     }
     /** Play or pause the audio */
     playPause() {
+        // eslint-disable-next-line require-yield
         return __awaiter(this, void 0, void 0, function* () {
             return this.isPlaying() ? this.pause() : this.play();
         });

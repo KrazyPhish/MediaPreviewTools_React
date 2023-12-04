@@ -19,15 +19,9 @@ const CommonPopover: React.ForwardRefExoticComponent<PopoverProps> = forwardRef(
 
   const [visible, setVisible] = useState(false)
 
-  const instanceProxy: {
-    reference: HTMLElement | null
-    popperEl: Instance | null
-    popper: HTMLDivElement | null
-  } = {
-    reference: null,
-    popperEl: null,
-    popper: null
-  }
+  const [reference, setReference] = useState<HTMLElement | null>(null)
+  const [popperEl, setPopperEl] = useState<Instance | null>(null)
+  const [popper, setPopper] = useState<HTMLDivElement | null>(null)
 
   const listeners: {
     stopReference: Function | null
@@ -57,8 +51,8 @@ const CommonPopover: React.ForwardRefExoticComponent<PopoverProps> = forwardRef(
       return
     }
     show()
-    if (!instanceProxy.popperEl) {
-      instanceProxy.popperEl = createPopper(instanceProxy.reference!, instanceProxy.popper!, {
+    if (!popperEl) {
+      setPopperEl(createPopper(reference!, popper!, {
         placement: props.placement ? props.placement : 'top',
         modifiers: [
           {
@@ -68,42 +62,35 @@ const CommonPopover: React.ForwardRefExoticComponent<PopoverProps> = forwardRef(
             }
           }
         ]
-      })
-    } else instanceProxy.popperEl.update()
+      }))
+    } else popperEl.update()
   }
 
   const onDocumentClick = (e: MouseEvent) => {
-    const refer: HTMLElement | null = instanceProxy.reference
-    const popper: HTMLDivElement | null = instanceProxy.popper
     const root: HTMLDivElement | null = popperRef.current
     const target = e.target as Node
-    if (!root || !refer || !popper || refer.contains(target) || root.contains(target) || popper.contains(target)) return
+    if (!root || !reference || !popper || reference.contains(target) || root.contains(target) || popper.contains(target)) return
     hide() 
   }
 
   const initPopper = () => {
     if (!props.reference) return
-    listeners.stopReference = setEventListener(instanceProxy.reference, 'click', onReferenceClick)
+    listeners.stopReference = setEventListener(reference, 'click', onReferenceClick)
     listeners.stopDocument = setEventListener(document, 'click', onDocumentClick)
   }
 
   const updatePopper = () => {
-    if (instanceProxy.popperEl) {
-      instanceProxy.popperEl.update()
-    } else initPopper()
+    if (popperEl) popperEl.update()
+    else initPopper()
   }
 
   const destroyPopper = () => {
-    instanceProxy.popperEl && instanceProxy.popperEl.destroy()
-    instanceProxy.popperEl = null
+    popperEl && popperEl.destroy()
+    setPopperEl(null)
   }
 
   useEffect(() => {
-    const refer = referenceRef.current
-    const popper = popperRef.current
-    if (!refer) return
-    instanceProxy.reference = refer
-    instanceProxy.popper = popper
+    if (!reference) return
     initPopper()
 
     return () => {
@@ -116,6 +103,11 @@ const CommonPopover: React.ForwardRefExoticComponent<PopoverProps> = forwardRef(
   useEffect(() => {
     visible ? updatePopper() : destroyPopper()
   }, [visible])
+
+  useEffect(() => {
+    setPopper(popperRef.current)
+    setReference(referenceRef.current)
+  }, [popperRef.current, referenceRef.current])
 
   return (
     <React.Fragment>

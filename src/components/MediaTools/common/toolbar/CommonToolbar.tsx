@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-restricted-globals */
 import React, { ForwardedRef, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react"
 import './CommonToolbar.css'
@@ -30,7 +31,7 @@ const CommonToolbar: React.ForwardRefExoticComponent<ToolbarProps> = forwardRef(
   /**
    * 拖动进度条的状态
    */
-  let isSync: boolean = false
+  const [isSync, setIsSync] = useState(false)
 
   const [time, setTime] = useState(0)
   const [rate, setRate] = useState(1)
@@ -81,7 +82,7 @@ const CommonToolbar: React.ForwardRefExoticComponent<ToolbarProps> = forwardRef(
   }
 
   const changeSync = (value: boolean) => {
-    isSync = value
+    setIsSync(value)
   }
 
   const init = () => {
@@ -95,6 +96,14 @@ const CommonToolbar: React.ForwardRefExoticComponent<ToolbarProps> = forwardRef(
   useEffect(() => {
     setEventListener(window, 'resize', listenResize)
   }, [])
+
+  useEffect(() => {
+    !isSync && props.skip(time)
+  }, [time])
+
+  useEffect(() => {
+    isSync && setTime(props.time)
+  }, [props.time])
 
   const volumeRefEl = (): JSX.Element => {
     if (volume === 0) {
@@ -113,7 +122,7 @@ const CommonToolbar: React.ForwardRefExoticComponent<ToolbarProps> = forwardRef(
           <div className="play-btns">
             <Icon icon="carbon:stop-filled" color="lightblue" width={28} height={28} onClick={stop}/>
             { 
-              isPlaying
+              !isPlaying
               ? <Icon icon="carbon:play-filled" color="lightblue" width={28} height={28} onClick={play}/>
               : <Icon icon="zondicons:pause-solid" color="lightblue" width={28} height={28} onClick={pause}/>
             } 
