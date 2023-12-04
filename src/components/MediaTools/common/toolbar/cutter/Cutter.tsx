@@ -107,7 +107,7 @@ const Cutter: React.FC<CutterProps> = (props) => {
   return (
     <div className='media-editor'>
       <Slider max={totalTime} tooltip={{ formatter: formatTooltip }} onChange={onRangeChange} range={true} />
-      <Form layout='vertical'>
+      <Form layout='inline'>
         <Form.Item>
           <Input
             ref={startInputRef}
@@ -129,7 +129,7 @@ const Cutter: React.FC<CutterProps> = (props) => {
           />
         </Form.Item>
         <Form.Item>
-          <Button type='primary' onClick={onSubmit} />
+          <Button type='primary' onClick={onSubmit} >剪 辑</Button>
         </Form.Item>
       </Form>
     </div>
