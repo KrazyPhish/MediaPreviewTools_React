@@ -3,18 +3,18 @@
 }
 
 .popper__arrow {
-  width: '15px';
-  height: '15px';
+  width: 15px;
+  height: 15px;
   z-index: -1;
-  box-sizing: 'border-box';
-  background-color: 'white';
+  box-sizing: border-box;
+  background-color: white;
   clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 }
 
-.common-popover .common-popper {
-  background-Color: 'white';
-  border-radius: '5px';
-  color: 'grey';
-  padding: '10px';
+.common-popover.common-popper {
+  background-color: white;
+  border-radius: 5px;
+  color: grey;
+  padding: 10px;
   box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 }

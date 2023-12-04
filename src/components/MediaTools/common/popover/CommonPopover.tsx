@@ -98,7 +98,7 @@ const CommonPopover: React.ForwardRefExoticComponent<PopoverProps> = forwardRef(
       listeners.stopReference?.()
       listeners.stopDocument?.()
     }
-  }, [])
+  }, [reference])
 
   useEffect(() => {
     visible ? updatePopper() : destroyPopper()
@@ -114,7 +114,7 @@ const CommonPopover: React.ForwardRefExoticComponent<PopoverProps> = forwardRef(
       <span className='popover-container' style={{ zIndex: 5 }}>
         <div
           ref={popperRef}
-          className={'common-popover common-popper ' + props.popperClass + (visible ? '' : ' popper-hide')}
+          className={'common-popover common-popper' + (props.popperClass ? ' ' + props.popperClass : '') + (visible ? '' : ' popper-hide')}
           style={{ width: props.width ? (typeof props.width === 'string' ? props.width : props.width + 'px') : 'auto' }}
         >
           {props.children}
