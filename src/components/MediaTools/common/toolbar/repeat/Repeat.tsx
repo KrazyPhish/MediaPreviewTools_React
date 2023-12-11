@@ -25,8 +25,8 @@ const Repeat: React.FC<RepeatProps> = (props) => {
     const s: number = iso2Time(start as string)
     const e: number = iso2Time(end as string)
     if (s >= e || s >= props.totalTime || e <= 0) {
-      message.warning({ content: '起止时间有误，请检查你的参数' })
       form.setFieldValue('repeat', false)
+      message.warning({ content: '起止时间有误，请检查你的参数' })
       return
     }
     props.toggleRepeat({ start: s, end: e, repeat })

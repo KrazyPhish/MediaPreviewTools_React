@@ -39,34 +39,32 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
   const [spinning, setSpinning] = useState(false)
   const [spinText, setSpinText] = useState('')
 
-  let wavesurfer: WaveSurfer | undefined
-  let region: RegionsPlugin = RegionsPlugin.create()
+  const [wavesurfer, setWavesurfer] = useState<WaveSurfer>()
+  const region: RegionsPlugin = RegionsPlugin.create()
 
   useEffect(() => {
-    initWave()
-    listenResize()
+    console.log('mount')
+    load()
+    return () => {
+      wavesurfer && wavesurfer.destroy()
+    }
   }, [])
-
-  useEffect(() => {
-    stop()
-    loadWave(props.url)
-  }, [props.url])
 
   useEffect(() => {
     setMuteAreas(props.dataSources.filter((d: AudioRegion) => d.mute))
   }, [props.dataSources])
 
   useEffect(() => {
-    reload()
+    load()
   }, [resized])
 
-  const loadWave = (url: string) => {
-    wavesurfer?.load(url)
+  const loadWave = (wavesurfer: WaveSurfer, url: string) => {
+    wavesurfer.load(url)
     region.clearRegions()
     props.dataSources.forEach((r: AudioRegion) => !r.mute && region.addRegion(r as Region))
   }
 
-  const initWave = () => {
+  const load = () => {
     if (!spectrogram && !spectrum) return
     let pluginCount: number = 0
     spectrogram && pluginCount++
@@ -80,6 +78,7 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
 
     plugins.push(hover)
     plugins.push(region)
+    waveSpectrogramRef.current?.replaceChildren()
     spectrogram && plugins.push(SpectrogramPlugin.create({
       container: waveSpectrogramRef.current as HTMLElement,
       labels: true,
@@ -88,8 +87,9 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
       colorMap
     }))
 
-    wavesurfer && wavesurfer.destroy()
-    wavesurfer = WaveSurfer.create({
+    wavesurfer !== undefined && wavesurfer.destroy()
+    waveSpectrumRef.current?.replaceChildren()
+    const nextWave: WaveSurfer = WaveSurfer.create({
       container: waveSpectrumRef.current as HTMLElement,
       barWidth: 4,
       waveColor: 'ligthgreen',
@@ -100,8 +100,11 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
       minPxPerSec: horizontalZoom,
       plugins
     })
-    bindEvent()
-    wavesurfer.setVolume(volume)
+    setWavesurfer(nextWave)
+    bindEvent(nextWave)
+    nextWave.setVolume(volume)
+    listenResize()
+    loadWave(nextWave, props.url)
   }
 
   const listenResize = () => {
@@ -110,23 +113,19 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
     })
   }
 
-  const reload = () => {
-    initWave()
-    loadWave(props.url)
-  }
-
-  const bindEvent = () => {
-    wavesurfer?.on('ready', (duration: number) => {
+  const bindEvent = (wavesurfer: WaveSurfer) => {
+    wavesurfer.on('ready', (duration: number) => {
       setTotalTime(duration * 1000)
-      wavesurfer?.seekTo(0)
+      wavesurfer.seekTo(0)
     })
-    wavesurfer?.on('audioprocess', (time: number) => {
+    wavesurfer.on('audioprocess', (time: number) => {
       setTime(time * 1000)
     })
-    wavesurfer?.on('seeking', (time: number) => {
+    wavesurfer.on('seeking', (time: number) => {
+      console.log(time)
       setTime(time * 1000)
     })
-    wavesurfer?.on('loading', (percentage: number) => {
+    wavesurfer.on('loading', (percentage: number) => {
       if (percentage === 100) {
         setSpinning(false)
       } else {
@@ -148,8 +147,8 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
     wavesurfer?.stop()
   }
 
-  const skip = () => {
-    wavesurfer?.seekTo(time / totalTime)
+  const skip = (time: number) => {
+    wavesurfer?.seekTo(totalTime ? (time / totalTime) : 0)
   }
 
   const onFullScreen = () => {
@@ -218,11 +217,11 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
     switch(mode) {
       case 'horizontal':
         setHorizontalZoom(zoom)
-        reload()
+        load()
         break
       case 'vertical':
         setVerticalZoom(zoom)
-        reload()
+        load()
         break
     }
   }
@@ -231,11 +230,11 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
     switch(mode) {
       case 'spectrum':
         setSpectrum(spect)
-        reload()
+        load()
         break
       case 'spectrogram':
         setSpectrogram(spect)
-        reload()
+        load()
         break
     }
   }
@@ -243,12 +242,11 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
   return (
     <div className="audio-container" ref={audioContainerRef}>
       <div className="audio-content">
-        <Spin tip={spinText} spinning={spinning} delay={300}>
-          <div className="wavesurfer-container" ref={wavesurferContainerRef}>
-            <div className="wave-spectrum" ref={waveSpectrumRef}></div>
-            <div className="wave-spectrogram" ref={waveSpectrogramRef}></div>
-          </div>
-        </Spin>
+        <Spin tip={spinText} spinning={spinning} delay={300}/>
+        <div className="wavesurfer-container" ref={wavesurferContainerRef}>
+          <div className="wave-spectrum" ref={waveSpectrumRef}></div>
+          <div className="wave-spectrogram" ref={waveSpectrogramRef}></div>
+        </div>
       </div>
       <AudioToolbar
         time={time}

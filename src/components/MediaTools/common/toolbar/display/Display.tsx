@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo, useState } from "react"
 import './Display.css'
 import { DeepRequired } from '../../../../../types/base'
 import { DisplayConfig, DisplaySettings } from "../../../../../types/audio"
@@ -12,37 +12,63 @@ type DisplayProps = {
 }
 
 const Display: React.FC<DisplayProps> = (props) => {
-  const options: DeepRequired<DisplayConfig> = {
-    spect: {
-      spectrum: props.options?.spect?.spectrum || true,
-      spectrogram: props.options?.spect?.spectrogram || false
-    },
-    zoomOptions: {
-      verticalZoom: {
-        init: props.options?.zoomOptions?.verticalZoom?.init ? props.options?.zoomOptions.verticalZoom.init : 1,
-        max: props.options?.zoomOptions?.verticalZoom?.max ? props.options?.zoomOptions.verticalZoom.max : 2,
-        min: props.options?.zoomOptions?.verticalZoom?.min ? props.options?.zoomOptions.verticalZoom.min : 1,
-        step: props.options?.zoomOptions?.verticalZoom?.step ? props.options?.zoomOptions.verticalZoom.step : 3
+  const options: DeepRequired<DisplayConfig> = useMemo(() => {
+    return {
+      spect: {
+        spectrum: props.options?.spect?.spectrum || true,
+        spectrogram: props.options?.spect?.spectrogram || true
       },
-      horizontalZoom: {
-        init: props.options?.zoomOptions?.horizontalZoom?.init ? props.options?.zoomOptions.horizontalZoom.init : 1,
-        max: props.options?.zoomOptions?.horizontalZoom?.max ? props.options?.zoomOptions.horizontalZoom.max : 2,
-        min: props.options?.zoomOptions?.horizontalZoom?.min ? props.options?.zoomOptions.horizontalZoom.min : 1,
-        step: props.options?.zoomOptions?.horizontalZoom?.step ? props.options?.zoomOptions.horizontalZoom.step : 0.01
+      zoomOptions: {
+        verticalZoom: {
+          init: props.options?.zoomOptions?.verticalZoom?.init ? props.options?.zoomOptions.verticalZoom.init : 1,
+          max: props.options?.zoomOptions?.verticalZoom?.max ? props.options?.zoomOptions.verticalZoom.max : 2,
+          min: props.options?.zoomOptions?.verticalZoom?.min ? props.options?.zoomOptions.verticalZoom.min : 1,
+          step: props.options?.zoomOptions?.verticalZoom?.step ? props.options?.zoomOptions.verticalZoom.step : 3
+        },
+        horizontalZoom: {
+          init: props.options?.zoomOptions?.horizontalZoom?.init ? props.options?.zoomOptions.horizontalZoom.init : 1,
+          max: props.options?.zoomOptions?.horizontalZoom?.max ? props.options?.zoomOptions.horizontalZoom.max : 2,
+          min: props.options?.zoomOptions?.horizontalZoom?.min ? props.options?.zoomOptions.horizontalZoom.min : 1,
+          step: props.options?.zoomOptions?.horizontalZoom?.step ? props.options?.zoomOptions.horizontalZoom.step : 0.01
+        }
       }
     }
-  }
+  }, [props.options])
+
+  const [verticalZoomValue, setVerticalZoomValue] = useState(options.zoomOptions.verticalZoom.init)
+  const [horizontalZoomValue, setHorizontalZoomValue] = useState(options.zoomOptions.horizontalZoom.init)
+  const [spectrumShow, setSpectrumShow] = useState(options.spect.spectrum)
+  const [spectrogramShow, setSpectrogramShow] = useState(options.spect.spectrogram)
 
   const spectHandler = debounce((mode: 'spectrogram' | 'spectrum', value: boolean) => props.onSpect(mode, value))
   const zoomHandler = debounce((mode: 'horizontal' | 'vertical', zoom: number) => props.onZoom(mode, zoom))
 
-  const onStateChange = (key: keyof DisplaySettings, value: DisplaySettings[keyof DisplaySettings]) => {
-    if (key === 'spectrogram' || key === 'spectrum') {
-      spectHandler(key, value as boolean)
-    } else if (key === 'horizontalZoom') {
-      zoomHandler('horizontal', value as number)
-    } else if (key === 'verticalZoom') {
-      zoomHandler('vertical', value as number)
+  const onStateChange = <K extends keyof DisplaySettings, T extends DisplaySettings>(key: K, value: T[K]) => {
+    switch (key) {
+      case 'spectrum': {
+        spectHandler(key, value as boolean)
+        setSpectrumShow(value as boolean)
+        break
+      }
+      case 'spectrogram': {
+        spectHandler(key, value as boolean)
+        setSpectrogramShow(value as boolean)
+        break
+      }
+      case 'horizontalZoom': {
+        zoomHandler('horizontal', value as number)
+        setHorizontalZoomValue(value as number)
+        break
+      }
+      case 'verticalZoom': {
+        zoomHandler('vertical', value as number)
+        setVerticalZoomValue(value as number)
+        break
+      }
+      default: {
+        const n: never = key
+        console.log(n)
+      }
     }
   }
 
@@ -51,21 +77,21 @@ const Display: React.FC<DisplayProps> = (props) => {
       <Form layout="horizontal" size="small">
         <Form.Item label='频谱图'>
           <Switch
-            checked={options.spect.spectrum}
-            disabled={!options.spect.spectrogram}
+            checked={spectrumShow}
+            disabled={!spectrogramShow}
             onChange={(value) => onStateChange('spectrum', value)}
           />
         </Form.Item>
         <Form.Item label='语谱图'>
           <Switch
-            checked={options.spect.spectrogram}
-            disabled={!options.spect.spectrum}
+            checked={spectrogramShow}
+            disabled={!spectrumShow}
             onChange={(value) => onStateChange('spectrogram', value)}
           />
         </Form.Item>
         <Form.Item label='水平缩放'>
           <Slider
-            value={options.zoomOptions.horizontalZoom.init}
+            value={horizontalZoomValue}
             min={options.zoomOptions.horizontalZoom.min}
             max={options.zoomOptions.horizontalZoom.max}
             step={options.zoomOptions.horizontalZoom.step}
@@ -75,7 +101,7 @@ const Display: React.FC<DisplayProps> = (props) => {
         </Form.Item>
         <Form.Item label='垂直缩放'>
           <Slider
-            value={options.zoomOptions.verticalZoom.init}
+            value={verticalZoomValue}
             min={options.zoomOptions.verticalZoom.min}
             max={options.zoomOptions.verticalZoom.max}
             step={options.zoomOptions.verticalZoom.step}
