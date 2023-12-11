@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react"
 import './AudioToolbar.css'
 import { AudioBtnConfig, DisplayConfig, RepeatSettings } from "../../../../../types/audio"
 import { CommonBtnConfig, Information } from "../../../../../types/base"
@@ -12,6 +13,10 @@ import Display from "../../../common/toolbar/display/Display"
 type AudioToolbarProps = {
   time: number
   totalTime: number
+  spectrum: boolean
+  spectrogram: boolean
+  horizontalZoom: number
+  verticalZoom: number
   btnOptions?: AudioBtnConfig
   displayOptions?: DisplayConfig
   information?: Array<Information>
@@ -41,6 +46,14 @@ const AudioToolbar: React.FC<AudioToolbarProps> = (props) => {
 
   const [skip, setSkip] = useState(false)
   const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    props.showMute(show)
+  }, [show])
+
+  useEffect(() => {
+    props.skipMute(skip)
+  }, [skip])
 
   return (
     <React.Fragment>
@@ -74,7 +87,15 @@ const AudioToolbar: React.FC<AudioToolbarProps> = (props) => {
         {
           (props.btnOptions?.ifDisplay !== false) &&
           <CommonPopover width={180} reference={<Icon icon="material-symbols:display-settings" color="lightblue" width={28} height={28}/>}>
-            <Display options={props.displayOptions} onSpect={props.onSpect} onZoom={props.onZoom}/>
+            <Display
+              spectrum={props.spectrum}
+              spectrogram={props.spectrogram}
+              horizontalZoom={props.horizontalZoom}
+              verticalZoom={props.verticalZoom}
+              options={props.displayOptions}
+              onSpect={props.onSpect}
+              onZoom={props.onZoom}
+            />
           </CommonPopover>
         }
       </CommonToolbar>

@@ -55,6 +55,7 @@ const CommonToolbar: React.ForwardRefExoticComponent<ToolbarProps> = forwardRef(
 
   const onRateChange = (rate: number) => {
     ratePopperRef.current?.hide()
+    setRate(rate)
     props.changeRate(rate)
   }
 

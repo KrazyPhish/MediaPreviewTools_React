@@ -38,7 +38,6 @@ export interface AudioBtnConfig extends CommonBtnConfig {
 }
 
 interface ZoomBase {
-  init: number,
   max: number,
   min: number,
   step: number
