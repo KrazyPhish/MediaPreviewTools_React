@@ -115,8 +115,8 @@ const App: React.FC = () => {
     { id: '2', name: 'test2', start: 1.111, end: 3.888, drag: false, resize: false, mute: false },
     { id: '5', name: 'test3', start: 5.000, end: 9.000, drag: false, resize: false, mute: false },
     { id: '10', name: 'test4', start: 9.000, end: 9.000, drag: false, resize: false, mute: false },
-    { id: '11', name: 'mute2', start: 14.000, end: 18.000, drag: false, resize: false, mute: true, color: 'rgba(230, 200, 60, 0.1)' },
-    { id: '12', name: 'mute3', start: 1.000, end: 3.000, drag: false, resize: false, mute: true, color: 'rgba(230, 200, 60, 0.1)' },
+    { id: '11', name: 'mute2', start: 14.000, end: 18.000, drag: false, resize: false, mute: true, color: 'rgba(230, 200, 60, 0.2)' },
+    { id: '12', name: 'mute3', start: 1.000, end: 3.000, drag: false, resize: false, mute: true, color: 'rgba(230, 200, 60, 0.2)' },
   ]
 
   const onTypeChange = (value: string) => {

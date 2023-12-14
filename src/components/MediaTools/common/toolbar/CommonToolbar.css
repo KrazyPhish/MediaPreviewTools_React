@@ -24,7 +24,6 @@
   appearance: none;
   -webkit-appearance: none;
   width: 100%;
-  height: var(--range-height);
   border-radius: 5px;
   background: #d3d3d3;
   outline: none;
@@ -71,4 +70,22 @@
       margin: 0 5px;
     }
   }
+}
+
+.play-rate {
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  color: lightblue;
+  justify-content: center;
+  align-items: center;
+}
+
+.play-rate-selection {
+  text-align: center;
+  width: 40px;
+}
+
+.selection-items:hover {
+  background-color: #00aeec;
 }

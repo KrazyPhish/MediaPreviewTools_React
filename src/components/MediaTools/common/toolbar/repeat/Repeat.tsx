@@ -14,12 +14,14 @@ const Repeat: React.FC<RepeatProps> = (props) => {
 
   const toggleRepeat = () => {
     const { start, end, repeat } = form.getFieldsValue()
+    console.log('repeat')
     if (!repeat) {
       props.toggleRepeat({ start: 0, end: 0, repeat })
       return
     }
     if (!start || !end) {
       message.warning({ content: '起止时间有误，请检查你的参数' })
+      form.setFieldValue('repeat', false)
       return
     } 
     const s: number = iso2Time(start as string)

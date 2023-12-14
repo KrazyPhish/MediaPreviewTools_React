@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import './ViewAudio.css'
 import { Information } from "../../../../types/base"
-import { AudioBtnConfig, AudioRegion, RepeatSettings } from "../../../../types/audio"
+import { AudioBtnConfig, AudioRegion, RepeatSettings, SpectOption } from "../../../../types/audio"
 import AudioToolbar from "./toolbar/AudioToolbar"
 import WaveSurfer from "./wavesurfer/wavesurfer"
 import RegionsPlugin, { Region } from "./wavesurfer/plugins/regions"
@@ -40,36 +40,19 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
   const [spinText, setSpinText] = useState('')
 
   const [wavesurfer, setWavesurfer] = useState<WaveSurfer>()
-  const region: RegionsPlugin = RegionsPlugin.create()
+  const [region] = useState<RegionsPlugin>(RegionsPlugin.create())
+
+  const [skipTimer, setSkipTimer] = useState<NodeJS.Timeout>()
+  const [repeatRegion, setRepeatRegion] = useState<Region>()
+  const [repeatTimer, setRepeatTimer] = useState<NodeJS.Timeout>()
 
   useEffect(() => {
     load()
-    return () => {
-      wavesurfer && wavesurfer.destroy()
-    }
-  }, [])
-
-  useEffect(() => {
-    load()
-  }, [spectrogram, spectrum])
-
-  useEffect(() => {
-    load()
-  }, [horizontalZoom, verticalZoom])
+  }, [horizontalZoom, verticalZoom, resized, spectrogram, spectrum])
 
   useEffect(() => {
     setMuteAreas(props.dataSources.filter((d: AudioRegion) => d.mute))
   }, [props.dataSources])
-
-  useEffect(() => {
-    load()
-  }, [resized])
-
-  const loadWave = (wavesurfer: WaveSurfer, url: string) => {
-    wavesurfer.load(url)
-    region.clearRegions()
-    props.dataSources.forEach((r: AudioRegion) => !r.mute && region.addRegion(r as Region))
-  }
 
   const load = () => {
     if (!spectrogram && !spectrum) return
@@ -111,7 +94,7 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
     bindEvent(nextWave)
     nextWave.setVolume(volume)
     listenResize()
-    loadWave(nextWave, props.url)
+    nextWave.load(props.url)
   }
 
   const listenResize = () => {
@@ -124,6 +107,8 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
     wavesurfer.on('ready', (duration: number) => {
       setTotalTime(duration * 1000)
       wavesurfer.seekTo(0)
+      region.clearRegions()
+      props.dataSources.forEach((r: AudioRegion) => !r.mute && region.addRegion(r as Region))
     })
     wavesurfer.on('audioprocess', (time: number) => {
       setTime(time * 1000)
@@ -174,17 +159,16 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
     wavesurfer?.setPlaybackRate(rate)
   }
 
-  let skipTimer: NodeJS.Timeout | undefined
   const skipMute = (value: boolean) => {
     if (!wavesurfer) return
     if (value) {
-      skipTimer = setInterval(() => {
+      setSkipTimer(setInterval(() => {
         const now: number = wavesurfer!.getCurrentTime()
         const mute: AudioRegion | undefined = muteAreas.find((m: AudioRegion) => {
           return (now >= m.start!) && (now <= m.end!)
         })
         mute && wavesurfer!.seekTo(mute.end! * 1000 / totalTime)
-      }, 500)
+      }, 500))
     } else skipTimer && clearInterval(skipTimer)
   }
 
@@ -197,8 +181,6 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
     })
   }
 
-  let repeatRegion: Region | undefined
-  let repeatTimer: NodeJS.Timeout | undefined
   const toggleRepeat = (value: RepeatSettings) => {
     if (!value.repeat && repeatRegion) {
       repeatTimer && clearInterval(repeatTimer)
@@ -210,14 +192,15 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
         end: value.end as number /1000,
         drag: false,
         resize: false,
-        color: 'rgba(0, 0, 0, 0)',
+        color: 'rgba(0, 0, 0, 0.3)',
       })
-      repeatRegion = region.getRegions().find((r: Region) => r.id === '__RepeatArea__')
-      repeatTimer = setInterval(() => {
+      const repeatR = region.getRegions().find((r: Region) => r.id === '__RepeatArea__')
+      setRepeatRegion(repeatR)
+      setRepeatTimer(setInterval(() => {
         const now = wavesurfer!.getCurrentTime()
-        if (now >= repeatRegion!.end) repeatRegion?.play()
-      }, 500)
-      repeatRegion?.play()
+        if (now >= repeatR!.end) repeatR?.play()
+      }, 500))
+      repeatR?.play()
     }
   }
 
@@ -234,7 +217,7 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
     }
   }
 
-  const onSpect = (mode: 'spectrum' | 'spectrogram', spect: boolean) => {
+  const onSpect = <K extends keyof SpectOption, T extends SpectOption>(mode: K, spect: T[K]) => {
     switch(mode) {
       case 'spectrum':
         setSpectrum(spect)
@@ -244,6 +227,9 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
         setSpectrogram(spect)
         load()
         break
+      default:
+        const key: never = mode
+        console.log(key)
     }
   }
 
