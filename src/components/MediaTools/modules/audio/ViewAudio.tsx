@@ -48,6 +48,9 @@ const ViewAudio: React.FC<AudioProps> = (props) => {
 
   useEffect(() => {
     load()
+    return () => {
+      wavesurfer?.destroy()
+    }
   }, [horizontalZoom, verticalZoom, resized, spectrogram, spectrum])
 
   useEffect(() => {
